@@ -400,10 +400,11 @@ html {
 /*Section 2*/
 
 .title__wrapper2 {
-	height: 25%;
+	height: 15%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-bottom: 5rem;
 }
 
 .section__skills {
