@@ -38,7 +38,7 @@ html {
 	justify-content: space-between;
 	background-color: #0ac3a7;
 	color: var(--blancoclock);
-	height: 7vh;
+	height: 8vh;
 	position: sticky;
 }
 .header__titres {
@@ -117,7 +117,7 @@ html {
 	color: var(--blancoclock);
 	font-weight: bold;
 	font-size: 1.3rem;
-	padding: 0.6rem;
+	padding: 0.6rem 0.6rem 1.05rem 0.6rem;
 	transition: all 300ms ease;
 	border-bottom: 5px solid var(--blancoclock);
 }
@@ -159,9 +159,10 @@ html {
 
 .main__container {
 	scroll-snap-type: y mandatory;
-	height: 90vh;
+	height: 88vh;
 	overflow: auto;
 	font-family: "Poiret One", sans-serif;
+	overflow-x: hidden;
 }
 
 .main__section {
@@ -541,9 +542,9 @@ html {
 .skills__progress p {
 	text-align: end;
 	margin-right: 2rem;
-	margin-top: 0.2rem;
+	margin-top: 0rem;
 	font-weight: bold;
-	font-size: 1rem;
+	font-size: 0.7rem;
 	color: rgb(255, 255, 255);
 	opacity: 1;
 }
@@ -677,7 +678,7 @@ html {
 
 footer {
 	background-color: teal;
-	height: 3vh;
+	height: 4vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -700,7 +701,7 @@ footer {
 }
 
 .logos img:hover {
-	transform: translateY(-5px);
+	transform: translateY(-4px);
 }
 
 @media screen and (max-width: 845px) {
