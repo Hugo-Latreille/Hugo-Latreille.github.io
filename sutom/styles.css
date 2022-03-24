@@ -1,0 +1,27 @@
+html {
+	background-color: #2b2b2b;
+	--couleur-case: #0077c7;
+}
+
+h1 {
+	color: white;
+	text-align: center;
+}
+
+.grilleContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.row {
+	display: flex;
+}
+
+.box {
+	border: 1px solid white;
+	height: 4rem;
+	width: 4rem;
+	background-color: var(--couleur-case);
+}
