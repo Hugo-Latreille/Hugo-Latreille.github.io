@@ -28,4 +28,21 @@ const createBox = () => {
 	}
 };
 
+const createKeyboard = () => {
+	let topKb = "AZERTYUIOP";
+	let middleKb = "QSDFGHJKLM";
+	let lowKb = "WXCVBN";
+	let keyboard = document.createElement("div");
+	keyboard.classList.add("keyboardContainer");
+};
+
 drawBoard();
+//* créer des rangées div
+//* chaque rangée, boucle pour div chaque touche
+//* mise en forme CSS
+//* chaque touche, event mouse
+
+//* fonction event clavier => chaque frappe écrit dans une box puis suivante une seule ligne. Valider envoie la donnée.
+
+//? puis s'occuper logique choix aléatoire du mot et vérification
+//? mise en place du système de couleurs
