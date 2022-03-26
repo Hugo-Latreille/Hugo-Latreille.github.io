@@ -45,44 +45,42 @@ const createKeyboard = (layout, className) => {
 
 const createKeyboardKeys = (className, layer) => {
 	const parent = document.querySelector(`.${className}`);
+	console.log(nextLetter);
 	for (let i = 0; i < layer.length; i++) {
 		let key = document.createElement("div");
 		key.classList.add("key");
 		key.classList.add(`${layer[i]}`);
 		key.textContent = layer[i];
 		key.addEventListener("click", (e) => {
-			insertLetter(e.target.textContent);
-			console.log(nextLetter, rowNumber);
+			if (nextLetter < 7) {
+				insertLetter(e.target.textContent);
+				nextLetter++;
+			} else {
+				nextLetter = 0;
+				rowNumber++;
+				insertLetter(e.target.textContent);
+				nextLetter++;
+			}
 		});
 		parent.appendChild(key);
 	}
 };
 
-//* ajouter hover lors clic kb
+//* ajouter hover lors clic kb + régler pb initialisation 1ère case ligne suivante
 
 const insertLetter = (pressedKey) => {
-	let rows = document.querySelectorAll(".row");
-	let boxes = rows[rowNumber].querySelectorAll(".box");
 	pressedKey.toLowerCase();
-	rowNumber < 6 ? rows[rowNumber].classList.add("selectedRow") : "";
-	if (nextLetter < 7) {
-		boxes[nextLetter].classList.add("selectedLetter");
-		boxes[nextLetter].textContent = pressedKey;
-		nextLetter++;
-	} else {
-		nextLetter = 0;
-		rowNumber++;
-	}
+	let rows = document.querySelectorAll(".row");
+	let boxes = rows[rowNumber]?.querySelectorAll(".box");
+	boxes[nextLetter].classList.add("selectedLetter");
+	boxes[nextLetter].textContent = pressedKey;
+
+	console.log(nextLetter, rowNumber);
 };
 
-// if (nextLetter < 6) {
-// 	nextLetter++;
-// } else {
-// 	nextLetter = 0;
-// 	rowNumber++;
-// }
-
 //* kb event général ==> afficher lettre dans le board, sur une ligne
+
+const keyboardEvent = () => {};
 
 //? puis s'occuper logique choix aléatoire du mot et vérification
 //* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
