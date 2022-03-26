@@ -57,7 +57,7 @@ const createKeyboardKeys = (className, layer) => {
 				nextLetter++;
 			} else {
 				nextLetter = 0;
-				rowNumber++;
+				rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
 				insertLetter(e.target.textContent);
 				nextLetter++;
 			}
@@ -67,7 +67,6 @@ const createKeyboardKeys = (className, layer) => {
 };
 
 //* ajouter hover lors clic kb + régler pb initialisation 1ère case ligne suivante
-
 const insertLetter = (pressedKey) => {
 	pressedKey.toLowerCase();
 	let rows = document.querySelectorAll(".row");
@@ -79,8 +78,19 @@ const insertLetter = (pressedKey) => {
 };
 
 //* kb event général ==> afficher lettre dans le board, sur une ligne
-
-const keyboardEvent = () => {};
+const keyboardEvent = () => {
+	document.addEventListener("keyup", (e) => {
+		if (nextLetter < 7) {
+			insertLetter(e.key.toUpperCase());
+			nextLetter++;
+		} else {
+			nextLetter = 0;
+			rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
+			insertLetter(e.key.toUpperCase());
+			nextLetter++;
+		}
+	});
+};
 
 //? puis s'occuper logique choix aléatoire du mot et vérification
 //* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
@@ -90,3 +100,4 @@ drawBoard();
 createKeyboard(topKb, "topKbDiv");
 createKeyboard(middleKb, "middleKbDiv");
 createKeyboard(lowKb, "lowKbDiv");
+keyboardEvent();

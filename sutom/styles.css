@@ -51,3 +51,12 @@ h1 {
 	align-items: center;
 	justify-content: center;
 }
+
+.box {
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 2rem;
+}
