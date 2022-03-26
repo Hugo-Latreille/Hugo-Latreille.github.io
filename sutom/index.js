@@ -42,7 +42,6 @@ const createKeyboard = (layout, className) => {
 
 	createKeyboardKeys(className, layout);
 };
-
 const createKeyboardKeys = (className, layer) => {
 	const parent = document.querySelector(`.${className}`);
 	console.log(nextLetter);
@@ -66,9 +65,9 @@ const createKeyboardKeys = (className, layer) => {
 	}
 };
 
-//* ajouter hover lors clic kb + régler pb initialisation 1ère case ligne suivante
+//* ajouter hover lors clic kb
 const insertLetter = (pressedKey) => {
-	pressedKey.toLowerCase();
+	// pressedKey.toLowerCase();
 	let rows = document.querySelectorAll(".row");
 	let boxes = rows[rowNumber]?.querySelectorAll(".box");
 	boxes[nextLetter].classList.add("selectedLetter");
@@ -77,22 +76,25 @@ const insertLetter = (pressedKey) => {
 	console.log(nextLetter, rowNumber);
 };
 
-//* kb event général ==> afficher lettre dans le board, sur une ligne
+//! ne conserver que les touches A-Z : [A-zÀ-ú] /^[A-zÀ-ú]+$
 const keyboardEvent = () => {
 	document.addEventListener("keyup", (e) => {
+		const regex = /[A-zÀ-ú]/;
+		let input = e.key.toUpperCase().match(regex);
 		if (nextLetter < 7) {
-			insertLetter(e.key.toUpperCase());
-			nextLetter++;
+			insertLetter(input);
+			input ? nextLetter++ : "";
 		} else {
 			nextLetter = 0;
 			rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-			insertLetter(e.key.toUpperCase());
+			insertLetter(input);
 			nextLetter++;
 		}
 	});
 };
 
-//? puis s'occuper logique choix aléatoire du mot et vérification
+//? puis s'occuper logique choix aléatoire du mot et vérification lettre par lettre
+//? puis vérification après validation ligne avec délais
 //* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
 //? mise en place du système de couleurs
 
