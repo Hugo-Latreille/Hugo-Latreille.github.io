@@ -1,7 +1,8 @@
 const nombreEssais = 6;
-let essaisRestant = nombreEssais;
+let essaisRestants = nombreEssais;
 let essaisEnCours = [];
 let nextLetter = 0;
+let rowNumber = 0;
 let board = document.querySelector(".grilleContainer");
 
 const drawBoard = () => {
@@ -49,17 +50,45 @@ const createKeyboardKeys = (className, layer) => {
 		key.classList.add("key");
 		key.classList.add(`${layer[i]}`);
 		key.textContent = layer[i];
+		key.addEventListener("click", (e) => {
+			insertLetter(e.target.textContent);
+			console.log(nextLetter, rowNumber);
+		});
 		parent.appendChild(key);
 	}
 };
+
+//* ajouter hover lors clic kb
+
+const insertLetter = (pressedKey) => {
+	let rows = document.querySelectorAll(".row");
+	let boxes = rows[rowNumber].querySelectorAll(".box");
+	pressedKey.toLowerCase();
+	rowNumber < 6 ? rows[rowNumber].classList.add("selectedRow") : "";
+	if (nextLetter < 7) {
+		boxes[nextLetter].classList.add("selectedLetter");
+		boxes[nextLetter].textContent = pressedKey;
+		nextLetter++;
+	} else {
+		nextLetter = 0;
+		rowNumber++;
+	}
+};
+
+// if (nextLetter < 6) {
+// 	nextLetter++;
+// } else {
+// 	nextLetter = 0;
+// 	rowNumber++;
+// }
+
+//* kb event général ==> afficher lettre dans le board, sur une ligne
+
+//? puis s'occuper logique choix aléatoire du mot et vérification
+//* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
+//? mise en place du système de couleurs
 
 drawBoard();
 createKeyboard(topKb, "topKbDiv");
 createKeyboard(middleKb, "middleKbDiv");
 createKeyboard(lowKb, "lowKbDiv");
-
-//* chaque touche, event mouse click ==> hover + afficher lettre dans le board
-//* kb event général ==> afficher lettre dans le board, sur une ligne
-
-//? puis s'occuper logique choix aléatoire du mot et vérification
-//? mise en place du système de couleurs
