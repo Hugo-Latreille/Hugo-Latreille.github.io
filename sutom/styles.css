@@ -15,13 +15,39 @@ h1 {
 	align-items: center;
 }
 
-.row {
+.grilleContainer .row {
 	display: flex;
 }
 
-.box {
+.grilleContainer .box {
 	border: 1px solid white;
 	height: 4rem;
 	width: 4rem;
 	background-color: var(--couleur-case);
+}
+
+.keyboard {
+	margin-top: 15rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.keyRows {
+	display: flex;
+	gap: 1rem;
+}
+
+.key {
+	height: 4vh;
+	width: 4vw;
+	border: 2px solid white;
+	color: white;
+	font-size: 1.6rem;
+	font-weight: 400;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
