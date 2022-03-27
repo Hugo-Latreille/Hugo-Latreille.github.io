@@ -62,14 +62,13 @@ const virtualKeyboardEvents = (key) => {
 			insertLetter(e.target.textContent);
 			nextLetter++;
 			essaisEnCours.push(e.target.textContent);
+			checkWord();
 		} else {
 			nextLetter = 0;
 			rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
 			insertLetter(e.target.textContent);
 			nextLetter++;
 		}
-		console.log(essaisEnCours[0]);
-		checkWord();
 	});
 	key.addEventListener("mousedown", () => {
 		key.classList.add("clicked");
@@ -85,6 +84,20 @@ const virtualKeyboardEvents = (key) => {
 		let keyMatched = document.querySelector(`.${e.key.toLocaleUpperCase()}`);
 		keyMatched.classList.remove("clicked");
 	});
+};
+
+//?vérification lettre par lettre
+const checkWord = () => {
+	for (let i = 0; i < essaisEnCours.length; i++) {
+		wordToFind = wordToFind.toString().toUpperCase();
+		// [0][i].toUpperCase();
+		console.log(wordToFind);
+		console.log(essaisEnCours[i]);
+		console.log(wordToFind[i]);
+		if (essaisEnCours[i] === wordToFind[i]) {
+			console.log("match");
+		}
+	}
 };
 
 const insertLetter = (pressedKey) => {
@@ -123,13 +136,6 @@ const chooseRandomWord = () => {
 	const randomIndex = Math.floor(Math.random() * words.length);
 	return wordToFind.push(words[randomIndex]);
 };
-//?vérification lettre par lettre
-const checkWord = () => {
-	wordToFind = wordToFind[0].toUpperCase();
-	if (essaisEnCours[0] === wordToFind[0]) {
-		alert("Gôgné !");
-	}
-};
 
 //? puis vérification après validation ligne avec délais
 //* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
@@ -141,4 +147,4 @@ createKeyboard(middleKb, "middleKbDiv");
 createKeyboard(lowKb, "lowKbDiv");
 keyboardEvent();
 chooseRandomWord();
-console.log(wordToFind[0][0].toUpperCase());
+console.log(wordToFind[0].toUpperCase());
