@@ -68,6 +68,8 @@ const virtualKeyboardEvents = (key) => {
 			insertLetter(e.target.textContent);
 			nextLetter++;
 		}
+		console.log(essaisEnCours[0]);
+		checkWord();
 	});
 	key.addEventListener("mousedown", () => {
 		key.classList.add("clicked");
@@ -94,15 +96,18 @@ const insertLetter = (pressedKey) => {
 	// console.log(nextLetter, rowNumber);
 };
 
-//TODO ajouter touches enter et delete et accents au clavier virtuel + physique
+//TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
+//TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
 const keyboardEvent = () => {
 	document.addEventListener("keyup", (e) => {
 		const regex = /[A-zÀ-ú]/;
 		let input = e.key.toUpperCase().match(regex);
-		if (nextLetter < 7) {
+		console.log(input);
+
+		if (nextLetter < 7 && input) {
 			insertLetter(input);
 			essaisEnCours.push(input);
-			input ? nextLetter++ : "";
+			nextLetter++;
 		} else {
 			nextLetter = 0;
 			rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
@@ -110,6 +115,7 @@ const keyboardEvent = () => {
 			essaisEnCours.push(input);
 			nextLetter++;
 		}
+		console.log(essaisEnCours[0]);
 	});
 };
 
@@ -120,9 +126,6 @@ const chooseRandomWord = () => {
 //?vérification lettre par lettre
 const checkWord = () => {
 	wordToFind = wordToFind[0].toUpperCase();
-	console.log(wordToFind);
-	console.log(wordToFind[0]);
-	console.log(essaisEnCours[0]);
 	if (essaisEnCours[0] === wordToFind[0]) {
 		alert("Gôgné !");
 	}
@@ -138,3 +141,4 @@ createKeyboard(middleKb, "middleKbDiv");
 createKeyboard(lowKb, "lowKbDiv");
 keyboardEvent();
 chooseRandomWord();
+console.log(wordToFind[0][0].toUpperCase());
