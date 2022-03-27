@@ -1,1 +1,1 @@
-export const words = ["fenêtre", "jambons"];
+export const words = ["fenetre", "jambons", "brigitt"];
