@@ -61,11 +61,24 @@ const createKeyboardKeys = (className, layer) => {
 				nextLetter++;
 			}
 		});
+		key.addEventListener("mousedown", () => {
+			key.classList.add("clicked");
+		});
+		key.addEventListener("mouseup", () => {
+			key.classList.remove("clicked");
+		});
+		document.addEventListener("keydown", (e) => {
+			let keyMatched = document.querySelector(`.${e.key.toLocaleUpperCase()}`);
+			keyMatched.classList.add("clicked");
+		});
+		document.addEventListener("keyup", (e) => {
+			let keyMatched = document.querySelector(`.${e.key.toLocaleUpperCase()}`);
+			keyMatched.classList.remove("clicked");
+		});
 		parent.appendChild(key);
 	}
 };
 
-//* ajouter hover lors clic kb
 const insertLetter = (pressedKey) => {
 	// pressedKey.toLowerCase();
 	let rows = document.querySelectorAll(".row");
@@ -76,7 +89,6 @@ const insertLetter = (pressedKey) => {
 	console.log(nextLetter, rowNumber);
 };
 
-//! ne conserver que les touches A-Z : [A-zÀ-ú] /^[A-zÀ-ú]+$
 const keyboardEvent = () => {
 	document.addEventListener("keyup", (e) => {
 		const regex = /[A-zÀ-ú]/;
