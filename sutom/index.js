@@ -1,6 +1,6 @@
 const nombreEssais = 6;
 let essaisRestants = nombreEssais;
-let wordToFind = [];
+let wordToFind = "";
 let essaisEnCours = [];
 let nextLetter = 0;
 let rowNumber = 0;
@@ -82,39 +82,6 @@ const virtualKeyboardEvents = (key) => {
 			return;
 		}
 	});
-
-	//TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
-	//TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
-	const keyboardEvent = () => {
-		document.addEventListener("keyup", (e) => {
-			const regex = /^[A-Z]$/;
-			let input = e.key.toUpperCase().match(regex);
-
-			if (e.key === "Enter") {
-				//submitGuess()
-				return;
-			}
-			if (e.key === "Backspace") {
-				deleteKey();
-				return;
-			}
-			if (e.key.match(/^[a-z]$/)) {
-				if (nextLetter < 7 && input) {
-					insertLetter(input);
-					// essaisEnCours.push(input);
-					// nextLetter++;
-				} else {
-					// nextLetter = 0;
-					// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-					// insertLetter(input);
-					// essaisEnCours.push(input);
-					// nextLetter++;
-					return;
-				}
-			}
-		});
-	};
-
 	key.addEventListener("mousedown", () => {
 		key.classList.add("clicked");
 	});
@@ -122,12 +89,45 @@ const virtualKeyboardEvents = (key) => {
 		key.classList.remove("clicked");
 	});
 	document.addEventListener("keydown", (e) => {
-		let keyMatched = document.querySelector(`.${e.key.toLocaleUpperCase()}`);
+		let keyMatched = document.querySelector(`.${e.key.toUpperCase()}`);
 		keyMatched.classList.add("clicked");
 	});
 	document.addEventListener("keyup", (e) => {
-		let keyMatched = document.querySelector(`.${e.key.toLocaleUpperCase()}`);
+		let keyMatched = document.querySelector(`.${e.key.toUpperCase()}`);
 		keyMatched.classList.remove("clicked");
+	});
+};
+
+//TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
+//TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
+
+const keyboardEvent = () => {
+	document.addEventListener("keyup", (e) => {
+		const regex = /^[A-Z]$/;
+		let input = e.key.toUpperCase().match(regex);
+
+		if (e.key === "Enter") {
+			checkWord();
+			return;
+		}
+		if (e.key === "Backspace") {
+			deleteKey();
+			return;
+		}
+		if (e.key.match(/^[a-z]$/)) {
+			if (nextLetter < 7 && input) {
+				insertLetter(input);
+				// essaisEnCours.push(input);
+				// nextLetter++;
+			} else {
+				// nextLetter = 0;
+				// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
+				// insertLetter(input);
+				// essaisEnCours.push(input);
+				// nextLetter++;
+				return;
+			}
+		}
 	});
 };
 
@@ -143,6 +143,39 @@ const checkLetter = () => {
 			console.log("match");
 		}
 	}
+};
+
+const checkWord = () => {
+	const activeBoxes = [...getActiveBoxes()];
+	if (activeBoxes.length !== wordToFind.length) {
+		showAlert("Pas assez de lettres !");
+		shakeBoxes(activeBoxes);
+		return;
+	}
+};
+
+const showAlert = (message, duration = 1000) => {
+	const alertContainer = document.querySelector(".alertContainer");
+	const alert = document.createElement("div");
+	alert.textContent = message;
+	alert.classList.add("alert");
+	alertContainer.prepend(alert);
+	if (duration == null) return;
+	setTimeout(() => {
+		alert.classList.add("hide");
+		alert.addEventListener("transitionend", () => {
+			alert.remove();
+		});
+	}, duration);
+};
+
+const shakeBoxes = (boxes) => {
+	boxes.forEach((box) => {
+		box.classList.add("shake");
+		box.addEventListener("animationend", () => {
+			box.classList.remove("shake");
+		});
+	});
 };
 
 const insertLetter = (pressedKey) => {
@@ -176,7 +209,9 @@ const getActiveBoxes = () => {
 
 const chooseRandomWord = () => {
 	const randomIndex = Math.floor(Math.random() * words.length);
-	return wordToFind.push(words[randomIndex]);
+	wordToFind = words[randomIndex].toUpperCase();
+	// return wordToFind.push(words[randomIndex]);
+	return wordToFind;
 };
 
 //? puis vérification après validation ligne avec délais
@@ -189,4 +224,4 @@ createKeyboard(middleKb, "middleKbDiv");
 createKeyboard(lowKb, "lowKbDiv");
 keyboardEvent();
 chooseRandomWord();
-console.log(wordToFind[0].toUpperCase());
+console.log(wordToFind);
