@@ -46,16 +46,45 @@ h1 {
 
 .key {
 	height: 3vh;
-	width: 3vw;
+	min-width: 3vw;
 	border: 2px solid white;
 	color: white;
 	font-size: 1.6rem;
 	font-weight: 400;
 	display: flex;
+	padding: 0.2rem;
 	align-items: center;
 	justify-content: center;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
+.key.wrong {
+	background-color: red;
+}
+
+.key.wrongLocation {
+	background-color: goldenrod;
+}
+
+.key.right {
+	background-color: green;
+}
+
+.box[data-state="active"] {
+	border-color: aquamarine;
+}
+
+.box[data-state="wrong"] {
+	background-color: red;
+}
+
+.box[data-state="wrongLocation"] {
+	background-color: goldenrod;
+}
+
+.box[data-state="right"] {
+	background-color: green;
+}
 .clicked {
 	background-color: white;
 	color: var(--background);

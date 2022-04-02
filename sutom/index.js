@@ -34,7 +34,7 @@ const createBox = () => {
 const keyboard = document.querySelector(".keyboard");
 let topKb = "AZERTYUIOP";
 let middleKb = "QSDFGHJKLM";
-let lowKb = "WXCVBN";
+let lowKb = ["W", "X", "C", "V", "B", "N", "Enter", "<<"];
 
 const createKeyboard = (layout, className) => {
 	let keyRow = document.createElement("div");
@@ -58,18 +58,63 @@ const createKeyboardKeys = (className, layer) => {
 
 const virtualKeyboardEvents = (key) => {
 	key.addEventListener("click", (e) => {
+		if (e.target.textContent === "Enter") {
+			//submitGuess()
+			return;
+		}
+
+		if (e.target.textContent === "<<") {
+			deleteKey();
+			return;
+		}
+
 		if (nextLetter < 7) {
 			insertLetter(e.target.textContent);
-			nextLetter++;
-			essaisEnCours.push(e.target.textContent);
-			checkWord();
+			// nextLetter++;
+			// essaisEnCours.push(e.target.textContent);
+			// checkLetter();
 		} else {
-			nextLetter = 0;
-			rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-			insertLetter(e.target.textContent);
-			nextLetter++;
+			// nextLetter = 0;
+			// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
+			// insertLetter(e.target.textContent);
+			// checkLetter();
+			// nextLetter++;
+			return;
 		}
 	});
+
+	//TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
+	//TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
+	const keyboardEvent = () => {
+		document.addEventListener("keyup", (e) => {
+			const regex = /^[A-Z]$/;
+			let input = e.key.toUpperCase().match(regex);
+
+			if (e.key === "Enter") {
+				//submitGuess()
+				return;
+			}
+			if (e.key === "Backspace") {
+				deleteKey();
+				return;
+			}
+			if (e.key.match(/^[a-z]$/)) {
+				if (nextLetter < 7 && input) {
+					insertLetter(input);
+					// essaisEnCours.push(input);
+					// nextLetter++;
+				} else {
+					// nextLetter = 0;
+					// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
+					// insertLetter(input);
+					// essaisEnCours.push(input);
+					// nextLetter++;
+					return;
+				}
+			}
+		});
+	};
+
 	key.addEventListener("mousedown", () => {
 		key.classList.add("clicked");
 	});
@@ -87,7 +132,7 @@ const virtualKeyboardEvents = (key) => {
 };
 
 //?vérification lettre par lettre
-const checkWord = () => {
+const checkLetter = () => {
 	for (let i = 0; i < essaisEnCours.length; i++) {
 		wordToFind = wordToFind.toString().toUpperCase();
 		// [0][i].toUpperCase();
@@ -101,35 +146,32 @@ const checkWord = () => {
 };
 
 const insertLetter = (pressedKey) => {
-	// pressedKey.toLowerCase();
-	let rows = document.querySelectorAll(".row");
-	let boxes = rows[rowNumber]?.querySelectorAll(".box");
-	boxes[nextLetter].classList.add("selectedLetter");
-	boxes[nextLetter].textContent = pressedKey;
-	// console.log(nextLetter, rowNumber);
+	const activesBoxes = getActiveBoxes();
+	const rows = document.querySelectorAll(".row");
+	const boxes = rows[rowNumber]?.querySelectorAll(".box");
+	if (activesBoxes.length >= 7) return;
+	const nextBox = rows[rowNumber]?.querySelector(":not([data-state])");
+	nextBox.classList.add("selectedLetter");
+	nextBox.dataset.state = "active";
+	nextBox.textContent = pressedKey;
+
+	// boxes[nextLetter].classList.add("selectedLetter");
+	// boxes[nextLetter].dataset.state = "active";
+	// boxes[nextLetter].textContent = pressedKey;
 };
 
-//TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
-//TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
-const keyboardEvent = () => {
-	document.addEventListener("keyup", (e) => {
-		const regex = /[A-zÀ-ú]/;
-		let input = e.key.toUpperCase().match(regex);
-		console.log(input);
+const deleteKey = () => {
+	const activesBoxes = getActiveBoxes();
+	const lastBox = activesBoxes[activesBoxes.length - 1];
+	if (lastBox === null) return;
+	lastBox.textContent = "";
+	delete lastBox.dataset.state;
+	lastBox.classList.remove("selectedLetter");
+};
 
-		if (nextLetter < 7 && input) {
-			insertLetter(input);
-			essaisEnCours.push(input);
-			nextLetter++;
-		} else {
-			nextLetter = 0;
-			rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-			insertLetter(input);
-			essaisEnCours.push(input);
-			nextLetter++;
-		}
-		console.log(essaisEnCours[0]);
-	});
+const getActiveBoxes = () => {
+	const rows = document.querySelectorAll(".row");
+	return rows[rowNumber]?.querySelectorAll('[data-state="active"]');
 };
 
 const chooseRandomWord = () => {
