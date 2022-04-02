@@ -152,6 +152,18 @@ const checkWord = () => {
 		shakeBoxes(activeBoxes);
 		return;
 	}
+
+	const guess = activeBoxes.reduce((word, box) => {
+		return word + box.textContent;
+	}, "");
+	// if (!dictionay.includes(guess)) {
+	// 	showAlert("Le mot n'est pas dans le dictionnaire");
+	// 	shakeBoxes(activeBoxes);
+	// 	return;
+	// }
+	if (guess === wordToFind) {
+		showAlert("Victoire !");
+	}
 };
 
 const showAlert = (message, duration = 1000) => {
