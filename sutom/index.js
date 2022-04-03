@@ -1,11 +1,10 @@
 const nombreEssais = 6;
-let essaisRestants = nombreEssais;
 let wordToFind = "";
-let essaisEnCours = [];
 let nextLetter = 0;
 let rowNumber = 0;
 let board = document.querySelector(".grilleContainer");
 const flipDuration = 500;
+const danceDuration = 500;
 import { words } from "./mots.js";
 
 const drawBoard = () => {
@@ -68,7 +67,7 @@ const virtualKeyboardEvents = (key) => {
 			deleteKey();
 			return;
 		}
-
+		console.log(nextLetter);
 		if (nextLetter < 7) {
 			insertLetter(e.target.textContent);
 			// nextLetter++;
@@ -100,10 +99,6 @@ const virtualKeyboardEvents = (key) => {
 	// 	keyMatched.classList.remove("clicked");
 	// });
 };
-
-//TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
-//TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
-
 const keyboardEvent = () => {
 	document.addEventListener("keyup", handleKeyboard);
 };
@@ -174,6 +169,7 @@ const checkWord = () => {
 	// }
 	// stopInteractions(key);
 	activeBoxes.forEach((box, index, array) => flipBox(box, index, array, guess));
+	rowNumber++;
 };
 
 const flipBox = (box, index, array, guess) => {
@@ -192,8 +188,32 @@ const flipBox = (box, index, array, guess) => {
 		} else if (wordToFind.includes(letter)) {
 			box.dataset.state = "wrongLocation";
 			key[0].classList.add("wrongLocation");
+		} else {
+			box.dataset.state = "wrong";
+			key[0].classList.add("wrong");
+		}
+		if (index === array.length - 1) {
+			box.addEventListener("transitionend", () => {
+				winLoose(guess, array);
+			});
 		}
 	});
+};
+
+const winLoose = (guess, boxes) => {
+	const grilleContainer = document.querySelector(".grilleContainer");
+
+	if (guess === wordToFind) {
+		showAlert("C'est gagné !", 5000);
+		danceBoxes(boxes);
+	}
+
+	const remainingBoxes = grilleContainer.querySelectorAll(
+		":not(.selectedLetter)"
+	);
+	if (remainingBoxes.length === 0) {
+		showAlert(wordToFind, null);
+	}
 };
 
 const showAlert = (message, duration = 1000) => {
@@ -220,10 +240,20 @@ const shakeBoxes = (boxes) => {
 	});
 };
 
+const danceBoxes = (boxes) => {
+	boxes.forEach((box, index) => {
+		setTimeout(() => {
+			box.classList.add("dance");
+			box.addEventListener("animationend", () => {
+				box.classList.remove("dance");
+			});
+		}, (index * danceDuration) / 5);
+	});
+};
+
 const insertLetter = (pressedKey) => {
 	const activesBoxes = getActiveBoxes();
 	const rows = document.querySelectorAll(".row");
-	const boxes = rows[rowNumber]?.querySelectorAll(".box");
 	if (activesBoxes.length >= 7) return;
 	const nextBox = rows[rowNumber]?.querySelector(":not([data-state])");
 	nextBox.classList.add("selectedLetter");

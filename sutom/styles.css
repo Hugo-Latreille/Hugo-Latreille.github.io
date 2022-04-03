@@ -100,6 +100,31 @@ h1 {
 	transition: transform 250ms linear;
 }
 
+.box.dance {
+	animation: dance 500ms ease-in-out;
+}
+
+@keyframes dance {
+	20% {
+		transform: translateY(-50%);
+	}
+	40% {
+		transform: translateY(5%);
+	}
+	60% {
+		transform: translateY(-25%);
+	}
+	80% {
+		transform: translateY(2.5%);
+	}
+	90% {
+		transform: translateY(-5%);
+	}
+	100% {
+		transform: translateY(0%);
+	}
+}
+
 .box.shake {
 	animation: shake 250ms ease-in-out;
 }
