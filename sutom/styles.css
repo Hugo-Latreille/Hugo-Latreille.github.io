@@ -74,7 +74,7 @@ h1 {
 }
 
 .box[data-state="active"] {
-	border-color: aquamarine;
+	background-color: rgb(86, 145, 255);
 }
 
 .box[data-state="wrong"] {
@@ -171,7 +171,8 @@ h1 {
 .alert {
 	pointer-events: none;
 	background-color: royalblue;
-	color: rgb(107, 18, 18);
+	color: white;
+	font-weight: bold;
 	padding: 0.75rem;
 	border-radius: 0.25em;
 	opacity: 1;

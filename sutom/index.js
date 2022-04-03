@@ -236,8 +236,8 @@ const danceBoxes = (boxes) => {
 const insertLetter = (pressedKey) => {
 	const activesBoxes = getActiveBoxes();
 	const rows = document.querySelectorAll(".row");
-	if (activesBoxes.length >= wordToFind.length) return;
 	const nextBox = rows[rowNumber]?.querySelector(":not([data-state])");
+	if (activesBoxes.length >= wordToFind.length) return;
 	nextBox.classList.add("selectedLetter");
 	nextBox.dataset.state = "active";
 	nextBox.textContent = pressedKey;
@@ -246,14 +246,10 @@ const insertLetter = (pressedKey) => {
 const deleteKey = () => {
 	const activesBoxes = getActiveBoxes();
 	const lastBox = activesBoxes[activesBoxes.length - 1];
-	const rows = document.querySelectorAll(".row");
-	const firstBox = rows[rowNumber].querySelector(".box:first-child");
-	firstBox.textContent = wordToFind[0];
 	if (lastBox === null) return;
-	console.log(activesBoxes.length);
-	// if (activesBoxes.length === 1) {
-	// 	lastBox.textContent = wordToFind[0];
-	// }
+	if (activesBoxes.length == 1) {
+		return (lastBox.textContent = wordToFind[0]);
+	}
 	lastBox.textContent = ".";
 	delete lastBox.dataset.state;
 	lastBox.classList.remove("selectedLetter");
@@ -270,10 +266,6 @@ const chooseRandomWord = () => {
 	// return wordToFind.push(words[randomIndex]);
 	return wordToFind;
 };
-
-//? puis vérification après validation ligne avec délais
-//* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
-//? mise en place du système de couleurs
 
 chooseRandomWord();
 drawBoard();
