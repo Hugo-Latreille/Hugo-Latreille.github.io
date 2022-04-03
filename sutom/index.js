@@ -198,7 +198,7 @@ const winLoose = (guess, boxes) => {
 	}
 
 	if (remainingBoxes.length === 0) {
-		showAlert(wordToFind, null);
+		showAlert(`Looser, le mot à trouver était ${wordToFind}`, null);
 	}
 };
 

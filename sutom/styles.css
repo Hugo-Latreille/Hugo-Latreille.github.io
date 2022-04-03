@@ -65,12 +65,12 @@ h1 {
 	background-color: red;
 }
 
-.key.wrongLocation {
-	background-color: goldenrod;
-}
-
 .key.right {
 	background-color: green;
+}
+
+.key.wrongLocation {
+	background-color: goldenrod;
 }
 
 .box[data-state="active"] {
