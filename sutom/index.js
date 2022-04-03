@@ -5,10 +5,19 @@ let rowNumber = 0;
 let board = document.querySelector(".grilleContainer");
 const flipDuration = 500;
 const danceDuration = 500;
-import { words } from "./mots.js";
+import { words } from "./Assets/listeMotsProposables.js";
+
+const firstLetterDot = () => {
+	const rows = document.querySelectorAll(".row");
+	const firstBox = rows[rowNumber].querySelector(".box:first-child");
+	const otherBoxes = rows[rowNumber].querySelectorAll(":not(.box:first-child)");
+	firstBox.textContent = wordToFind[0];
+	otherBoxes.forEach((box) => (box.textContent = "."));
+};
 
 const drawBoard = () => {
 	createRow();
+	firstLetterDot();
 };
 
 const createRow = () => {
@@ -21,9 +30,9 @@ const createRow = () => {
 };
 
 const createBox = () => {
-	let rows = document.querySelectorAll(".row");
+	const rows = document.querySelectorAll(".row");
 	for (let row of rows) {
-		for (let i = 0; i < 7; i++) {
+		for (let i = 0; i < wordToFind.length; i++) {
 			let box = document.createElement("div");
 			box.classList.add("box");
 			row.appendChild(box);
@@ -62,25 +71,11 @@ const virtualKeyboardEvents = (key) => {
 			checkWord();
 			return;
 		}
-
 		if (e.target.textContent === "<<") {
 			deleteKey();
 			return;
 		}
-		console.log(nextLetter);
-		if (nextLetter < 7) {
-			insertLetter(e.target.textContent);
-			// nextLetter++;
-			// essaisEnCours.push(e.target.textContent);
-			// checkLetter();
-		} else {
-			// nextLetter = 0;
-			// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-			// insertLetter(e.target.textContent);
-			// checkLetter();
-			// nextLetter++;
-			return;
-		}
+		insertLetter(e.target.textContent);
 	};
 
 	key.addEventListener("click", handleClick);
@@ -116,18 +111,7 @@ const handleKeyboard = (e) => {
 		return;
 	}
 	if (e.key.match(/^[a-z]$/)) {
-		if (nextLetter < 7 && input) {
-			insertLetter(input);
-			// essaisEnCours.push(input);
-			// nextLetter++;
-		} else {
-			// nextLetter = 0;
-			// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-			// insertLetter(input);
-			// essaisEnCours.push(input);
-			// nextLetter++;
-			return;
-		}
+		insertLetter(input);
 	}
 };
 //! réparer, logique ok
@@ -194,13 +178,13 @@ const flipBox = (box, index, array, guess) => {
 		if (index === array.length - 1) {
 			box.addEventListener("transitionend", () => {
 				winLoose(guess, array);
+				firstLetterDot();
 			});
 		}
 	});
 };
 
 const winLoose = (guess, boxes) => {
-	const grilleContainer = document.querySelector(".grilleContainer");
 	const rows = document.querySelectorAll(".row");
 	const remainingBoxes = rows[5]?.querySelectorAll(":not([data-state])");
 
@@ -252,7 +236,7 @@ const danceBoxes = (boxes) => {
 const insertLetter = (pressedKey) => {
 	const activesBoxes = getActiveBoxes();
 	const rows = document.querySelectorAll(".row");
-	if (activesBoxes.length >= 7) return;
+	if (activesBoxes.length >= wordToFind.length) return;
 	const nextBox = rows[rowNumber]?.querySelector(":not([data-state])");
 	nextBox.classList.add("selectedLetter");
 	nextBox.dataset.state = "active";
@@ -275,7 +259,7 @@ const getActiveBoxes = () => {
 
 const chooseRandomWord = () => {
 	const randomIndex = Math.floor(Math.random() * words.length);
-	wordToFind = words[randomIndex].toUpperCase();
+	wordToFind = words[randomIndex];
 	// return wordToFind.push(words[randomIndex]);
 	return wordToFind;
 };
@@ -284,10 +268,10 @@ const chooseRandomWord = () => {
 //* random dans une liste de mots --> afficher la première lettre du mot --> décomposer système de vérification
 //? mise en place du système de couleurs
 
+chooseRandomWord();
 drawBoard();
 createKeyboard(topKb, "topKbDiv");
 createKeyboard(middleKb, "middleKbDiv");
 createKeyboard(lowKb, "lowKbDiv");
 keyboardEvent();
-chooseRandomWord();
 console.log(wordToFind);
