@@ -12,6 +12,7 @@ const firstLetterDot = () => {
 	const firstBox = rows[rowNumber].querySelector(".box:first-child");
 	const otherBoxes = rows[rowNumber].querySelectorAll(":not(.box:first-child)");
 	firstBox.textContent = wordToFind[0];
+	firstBox.dataset.state = "inactive";
 	otherBoxes.forEach((box) => (box.textContent = "."));
 };
 
@@ -137,13 +138,15 @@ const handleKeyboard = (e) => {
 
 const checkWord = () => {
 	const activeBoxes = [...getActiveBoxes()];
+	const rows = document.querySelectorAll(".row");
+	const boxes = rows[rowNumber].querySelectorAll(".box");
 	const key = keyboard.querySelectorAll(`.key`);
-	if (activeBoxes.length !== wordToFind.length) {
+	if (activeBoxes.length !== wordToFind.length - 1) {
 		showAlert("Pas assez de lettres !");
 		shakeBoxes(activeBoxes);
 		return;
 	}
-	const guess = activeBoxes.reduce((word, box) => {
+	let guess = activeBoxes.reduce((word, box) => {
 		return word + box.textContent;
 	}, "");
 	// if (!dictionay.includes(guess)) {
@@ -152,7 +155,8 @@ const checkWord = () => {
 	// 	return;
 	// }
 	// stopInteractions(key);
-	activeBoxes.forEach((box, index, array) => flipBox(box, index, array, guess));
+	guess = wordToFind[0] + guess;
+	boxes.forEach((box, index, array) => flipBox(box, index, array, guess));
 	rowNumber++;
 };
 
@@ -237,7 +241,7 @@ const insertLetter = (pressedKey) => {
 	const activesBoxes = getActiveBoxes();
 	const rows = document.querySelectorAll(".row");
 	const nextBox = rows[rowNumber]?.querySelector(":not([data-state])");
-	if (activesBoxes.length >= wordToFind.length) return;
+	if (activesBoxes.length >= wordToFind.length - 1) return;
 	nextBox.classList.add("selectedLetter");
 	nextBox.dataset.state = "active";
 	nextBox.textContent = pressedKey;
@@ -247,12 +251,14 @@ const deleteKey = () => {
 	const activesBoxes = getActiveBoxes();
 	const lastBox = activesBoxes[activesBoxes.length - 1];
 	if (lastBox === null) return;
-	if (activesBoxes.length == 1) {
-		return (lastBox.textContent = wordToFind[0]);
+	// if (activesBoxes.length == 1) {
+	// 	return (lastBox.textContent = wordToFind[0]);
+	// }
+	if (lastBox !== undefined) {
+		lastBox.textContent = ".";
+		delete lastBox.dataset.state;
+		lastBox.classList.remove("selectedLetter");
 	}
-	lastBox.textContent = ".";
-	delete lastBox.dataset.state;
-	lastBox.classList.remove("selectedLetter");
 };
 
 const getActiveBoxes = () => {
