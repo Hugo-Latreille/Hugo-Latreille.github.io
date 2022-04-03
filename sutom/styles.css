@@ -97,6 +97,7 @@ h1 {
 	justify-content: center;
 	font-weight: bold;
 	font-size: 2rem;
+	transition: transform 250ms linear;
 }
 
 .box.shake {
@@ -122,6 +123,10 @@ h1 {
 	100% {
 		transform: translateX(0);
 	}
+}
+
+.box.flip {
+	transform: rotateX(90deg);
 }
 
 .alertContainer {

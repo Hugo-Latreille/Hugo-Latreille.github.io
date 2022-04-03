@@ -5,6 +5,7 @@ let essaisEnCours = [];
 let nextLetter = 0;
 let rowNumber = 0;
 let board = document.querySelector(".grilleContainer");
+const flipDuration = 500;
 import { words } from "./mots.js";
 
 const drawBoard = () => {
@@ -57,9 +58,9 @@ const createKeyboardKeys = (className, layer) => {
 };
 
 const virtualKeyboardEvents = (key) => {
-	key.addEventListener("click", (e) => {
+	const handleClick = (e) => {
 		if (e.target.textContent === "Enter") {
-			//submitGuess()
+			checkWord();
 			return;
 		}
 
@@ -81,78 +82,88 @@ const virtualKeyboardEvents = (key) => {
 			// nextLetter++;
 			return;
 		}
-	});
+	};
+
+	key.addEventListener("click", handleClick);
 	key.addEventListener("mousedown", () => {
 		key.classList.add("clicked");
 	});
 	key.addEventListener("mouseup", () => {
 		key.classList.remove("clicked");
 	});
-	document.addEventListener("keydown", (e) => {
-		let keyMatched = document.querySelector(`.${e.key.toUpperCase()}`);
-		keyMatched.classList.add("clicked");
-	});
-	document.addEventListener("keyup", (e) => {
-		let keyMatched = document.querySelector(`.${e.key.toUpperCase()}`);
-		keyMatched.classList.remove("clicked");
-	});
+	// document.addEventListener("keydown", (e) => {
+	// 	let keyMatched = document.querySelector(`.${e.key.toUpperCase()}`);
+	// 	keyMatched.classList.add("clicked");
+	// });
+	// document.addEventListener("keyup", (e) => {
+	// 	let keyMatched = document.querySelector(`.${e.key.toUpperCase()}`);
+	// 	keyMatched.classList.remove("clicked");
+	// });
 };
 
 //TODO ajouter touches enter et delete et accents au clavier virtuel + physique /
 //TODO ajouter logique 1 ligne puis enter pour vérification puis ligne 2
 
 const keyboardEvent = () => {
-	document.addEventListener("keyup", (e) => {
-		const regex = /^[A-Z]$/;
-		let input = e.key.toUpperCase().match(regex);
-
-		if (e.key === "Enter") {
-			checkWord();
-			return;
-		}
-		if (e.key === "Backspace") {
-			deleteKey();
-			return;
-		}
-		if (e.key.match(/^[a-z]$/)) {
-			if (nextLetter < 7 && input) {
-				insertLetter(input);
-				// essaisEnCours.push(input);
-				// nextLetter++;
-			} else {
-				// nextLetter = 0;
-				// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
-				// insertLetter(input);
-				// essaisEnCours.push(input);
-				// nextLetter++;
-				return;
-			}
-		}
-	});
+	document.addEventListener("keyup", handleKeyboard);
 };
 
-//?vérification lettre par lettre
-const checkLetter = () => {
-	for (let i = 0; i < essaisEnCours.length; i++) {
-		wordToFind = wordToFind.toString().toUpperCase();
-		// [0][i].toUpperCase();
-		console.log(wordToFind);
-		console.log(essaisEnCours[i]);
-		console.log(wordToFind[i]);
-		if (essaisEnCours[i] === wordToFind[i]) {
-			console.log("match");
+const handleKeyboard = (e) => {
+	const regex = /^[A-Z]$/;
+	let input = e.key.toUpperCase().match(regex);
+
+	if (e.key === "Enter") {
+		checkWord();
+		return;
+	}
+	if (e.key === "Backspace") {
+		deleteKey();
+		return;
+	}
+	if (e.key.match(/^[a-z]$/)) {
+		if (nextLetter < 7 && input) {
+			insertLetter(input);
+			// essaisEnCours.push(input);
+			// nextLetter++;
+		} else {
+			// nextLetter = 0;
+			// rowNumber < 6 ? rowNumber++ : (rowNumber = 0);
+			// insertLetter(input);
+			// essaisEnCours.push(input);
+			// nextLetter++;
+			return;
 		}
 	}
 };
+//! réparer, logique ok
+// const stopInteractions = (key) => {
+// 	document.removeEventListener("keyup", handleKeyboard);
+// 	key.removeEventListener("click", handleClick);
+// };
+
+//?vérification lettre par lettre
+//! vérifier si logique réalisable
+// const checkLetter = () => {
+// 	for (let i = 0; i < essaisEnCours.length; i++) {
+// 		wordToFind = wordToFind.toString().toUpperCase();
+// 		// [0][i].toUpperCase();
+// 		console.log(wordToFind);
+// 		console.log(essaisEnCours[i]);
+// 		console.log(wordToFind[i]);
+// 		if (essaisEnCours[i] === wordToFind[i]) {
+// 			console.log("match");
+// 		}
+// 	}
+// };
 
 const checkWord = () => {
 	const activeBoxes = [...getActiveBoxes()];
+	const key = keyboard.querySelectorAll(`.key`);
 	if (activeBoxes.length !== wordToFind.length) {
 		showAlert("Pas assez de lettres !");
 		shakeBoxes(activeBoxes);
 		return;
 	}
-
 	const guess = activeBoxes.reduce((word, box) => {
 		return word + box.textContent;
 	}, "");
@@ -161,9 +172,28 @@ const checkWord = () => {
 	// 	shakeBoxes(activeBoxes);
 	// 	return;
 	// }
-	if (guess === wordToFind) {
-		showAlert("Victoire !");
-	}
+	// stopInteractions(key);
+	activeBoxes.forEach((box, index, array) => flipBox(box, index, array, guess));
+};
+
+const flipBox = (box, index, array, guess) => {
+	const letter = box.textContent;
+	const keyboard = document.querySelector(".keyboard");
+	const key = keyboard.querySelectorAll(`.${letter}`);
+	console.log(key);
+	setTimeout(() => {
+		box.classList.add("flip");
+	}, (index * flipDuration) / 2);
+	box.addEventListener("transitionend", () => {
+		box.classList.remove("flip");
+		if (wordToFind[index] === letter) {
+			box.dataset.state = "right";
+			key[0].classList.add("right");
+		} else if (wordToFind.includes(letter)) {
+			box.dataset.state = "wrongLocation";
+			key[0].classList.add("wrongLocation");
+		}
+	});
 };
 
 const showAlert = (message, duration = 1000) => {
