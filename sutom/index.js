@@ -176,7 +176,6 @@ const flipBox = (box, index, array, guess) => {
 	const letter = box.textContent;
 	const keyboard = document.querySelector(".keyboard");
 	const key = keyboard.querySelectorAll(`.${letter}`);
-	console.log(key);
 	setTimeout(() => {
 		box.classList.add("flip");
 	}, (index * flipDuration) / 2);
@@ -202,15 +201,14 @@ const flipBox = (box, index, array, guess) => {
 
 const winLoose = (guess, boxes) => {
 	const grilleContainer = document.querySelector(".grilleContainer");
+	const rows = document.querySelectorAll(".row");
+	const remainingBoxes = rows[5]?.querySelectorAll(":not([data-state])");
 
 	if (guess === wordToFind) {
 		showAlert("C'est gagné !", 5000);
 		danceBoxes(boxes);
 	}
 
-	const remainingBoxes = grilleContainer.querySelectorAll(
-		":not(.selectedLetter)"
-	);
 	if (remainingBoxes.length === 0) {
 		showAlert(wordToFind, null);
 	}
@@ -259,10 +257,6 @@ const insertLetter = (pressedKey) => {
 	nextBox.classList.add("selectedLetter");
 	nextBox.dataset.state = "active";
 	nextBox.textContent = pressedKey;
-
-	// boxes[nextLetter].classList.add("selectedLetter");
-	// boxes[nextLetter].dataset.state = "active";
-	// boxes[nextLetter].textContent = pressedKey;
 };
 
 const deleteKey = () => {
