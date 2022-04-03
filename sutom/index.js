@@ -246,8 +246,15 @@ const insertLetter = (pressedKey) => {
 const deleteKey = () => {
 	const activesBoxes = getActiveBoxes();
 	const lastBox = activesBoxes[activesBoxes.length - 1];
+	const rows = document.querySelectorAll(".row");
+	const firstBox = rows[rowNumber].querySelector(".box:first-child");
+	firstBox.textContent = wordToFind[0];
 	if (lastBox === null) return;
-	lastBox.textContent = "";
+	console.log(activesBoxes.length);
+	// if (activesBoxes.length === 1) {
+	// 	lastBox.textContent = wordToFind[0];
+	// }
+	lastBox.textContent = ".";
 	delete lastBox.dataset.state;
 	lastBox.classList.remove("selectedLetter");
 };

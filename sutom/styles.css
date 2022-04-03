@@ -50,14 +50,15 @@ h1 {
 .key {
 	height: 3vh;
 	min-width: 3vw;
-	border: 2px solid white;
+	border: 1px solid white;
 	color: white;
 	font-size: 1.6rem;
-	font-weight: 400;
 	display: flex;
-	padding: 0.2rem;
+	padding: 0.6rem;
 	align-items: center;
 	justify-content: center;
+	border-radius: 5px;
+	font-family: monospace;
 }
 
 .key.wrong {
